@@ -48,8 +48,10 @@ function main() {
 
 			app.get("/video", (req, res) => {
 				const videoId = new mongodb.ObjectID(req.query.id);
-				videosCollection.findOne({ _id: videoId })
+				//videosCollection.findOne({ _id: videoId })
+				videosCollection.findOne({ "videoPath": "SampleVideo_1280x720_1mb.mp4" })
 					.then(videoRecord => {
+						console.log(videoRecord)
 						if (!videoRecord) {
 							res.sendStatus(404);
 							return;
@@ -61,7 +63,8 @@ function main() {
 							{
 								host: VIDEO_STORAGE_HOST,
 								port: VIDEO_STORAGE_PORT,
-								path: `/video?path=${videoRecord.videoPath}`, // Video path now retrieved from the database.
+								//path: `/video?path=${videoRecord.videoPath}`, // Video path now retrieved from the database.
+								path: `/video`, // Video path now retrieved from the database.
 								method: 'GET',
 								headers: req.headers
 							},
