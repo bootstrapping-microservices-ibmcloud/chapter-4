@@ -48,8 +48,9 @@ function main() {
 
 			app.get("/video", (req, res) => {
 				const videoId = new mongodb.ObjectID(req.query.id);
-				//videosCollection.findOne({ _id: videoId })
+				videosCollection.insertOne({ "_id": "5d9e690ad76fe06a3d7ae416", "videoPath": "SampleVideo_1280x720_1mb.mp4" })
 				videosCollection.findOne({ "videoPath": "SampleVideo_1280x720_1mb.mp4" })
+					//videosCollection.findOne({ _id: videoId })
 					.then(videoRecord => {
 						console.log(videoRecord)
 						if (!videoRecord) {
