@@ -37,7 +37,10 @@ const VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST;
 const VIDEO_STORAGE_PORT = parseInt(process.env.VIDEO_STORAGE_PORT);
 const DBHOST = process.env.DBHOST;
 const DBNAME = process.env.DBNAME;
-
+const videoEntries = {
+	"id": "5d9e690ad76fe06a3d7ae416",
+	"videoPath": "SampleVideo_1280x720_1mb.mp4"
+}
 console.log(`Forwarding video requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_PORT}.`);
 
 function main() {
@@ -45,12 +48,17 @@ function main() {
 		.then(client => {
 			const db = client.db(DBNAME);
 			const videosCollection = db.collection("videos");
-
+			videosCollection.insertOne(videoEntries)
 			app.get("/video", (req, res) => {
 				const videoId = new mongodb.ObjectID(req.query.id);
-				videosCollection.insertOne({ "_id": "5d9e690ad76fe06a3d7ae416", "videoPath": "SampleVideo_1280x720_1mb.mp4" })
-				videosCollection.findOne({ "videoPath": "SampleVideo_1280x720_1mb.mp4" })
-					//videosCollection.findOne({ _id: videoId })
+				console.log(req.query);
+				console.log(req.query.id);
+				//videosCollection.findOne({ "videoPath": "SampleVideo_1280x720_1mb.mp4" });
+				//console.log(`Translated id ${videoId} to path ${videoRecord.videoPath}.`);
+				//videosCollection.findOne({ "videoPath": "SampleVideo_1280x720_1mb.mp4" })
+				//videosCollection.findOne({ id: videoId })
+				// allows videoPath query: localhost:4002/video?videoPath=SampleVideo_1280x720_1mb.mp4
+				videosCollection.findOne(req.query)
 					.then(videoRecord => {
 						console.log(videoRecord)
 						if (!videoRecord) {
